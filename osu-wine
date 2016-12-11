@@ -76,8 +76,9 @@ source "$CONF" &> /dev/null || ERRO "Missing: ${CONF}!"
     ln -Tfs "$OSU_INSTALL_PATH" "$WINEPREFIX/dosdevices/x:"
 }
 
+cd "$OSU_INSTALL_PATH" || exit 1
+
 {
-    cd "$OSU_INSTALL_PATH" || exit 1
     if [ ! -f "osu!.exe" ]; then
         INFO "Can't find osu exe, reinstall"
         wget http://m1.ppy.sh/r/osu!install.exe -O osu_install.exe
@@ -85,4 +86,12 @@ source "$CONF" &> /dev/null || ERRO "Missing: ${CONF}!"
 }
 
 INFO "Initialization Finished"
-$PREFIXCOMMAND wine "X:/osu!.exe" "$1";
+
+if [ -f "$1" ]; then
+    NAME="$(basename $1)"
+    mv -v "$1" ./
+    $PREFIXCOMMAND wine "X:/osu!.exe" ./"$NAME"
+    exit 0
+else
+    $PREFIXCOMMAND wine "X:/osu!.exe"
+fi
