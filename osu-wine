@@ -88,9 +88,11 @@ cd "$OSU_INSTALL_PATH" || exit 1
 INFO "Initialization Finished"
 
 if [ -f "$1" ]; then
-    NAME="$(basename $1)"
     mv -v "$1" ./
-    $PREFIXCOMMAND wine "X:/osu!.exe" ./"$NAME"
+    for file in ./*.osz ./*.osz2 ./*.osr ./*.osk; do
+        [ ! -f "$file" ] && continue
+        $PREFIXCOMMAND wine "X:/osu!.exe" "$file"
+    done
     exit 0
 else
     $PREFIXCOMMAND wine "X:/osu!.exe"
