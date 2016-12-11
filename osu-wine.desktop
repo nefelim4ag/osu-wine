@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=osu!
+Comment=osu!
+Type=Application
+Exec=osu-wine
+Icon=osu-wine
+Terminal=false
+Categories=Wine;Game;

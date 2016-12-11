@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=osu!
+MimeType=application/x-wine-extension-osr;
+Exec=osu-wine %f
+NoDisplay=true
+StartupNotify=true
+Icon=osu-wine
