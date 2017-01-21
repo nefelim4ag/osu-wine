@@ -81,7 +81,7 @@ cd "$OSU_INSTALL_PATH" || exit 1
 {
     if [ ! -f "osu!.exe" ]; then
         INFO "Can't find osu exe, reinstall"
-        wget http://m1.ppy.sh/r/osu!install.exe -O osu_install.exe
+        wget http://m1.ppy.sh/r/osu!install.exe -O "osu!.exe"
     fi
 }
 
