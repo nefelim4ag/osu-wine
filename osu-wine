@@ -1,8 +1,8 @@
 #!/bin/bash
 ## Logging functions
-INFO(){ echo -n "INFO: "; echo "$@" ;}
-WARN(){ echo -n "WARN: "; echo "$@" ;}
-ERRO(){ echo -n "ERRO: "; echo "$@" ; exit 1;}
+INFO(){ echo -n "INFO: $*";}
+WARN(){ echo -n "WARN: $*";}
+ERRO(){ echo -n "ERRO: $*"; exit 1;}
 
 ## Check some deps
 bin_exist(){ command -v "$1" &> /dev/null || ERRO "Missing ${1}!"; }
@@ -45,7 +45,7 @@ source "$CONF" &> /dev/null || ERRO "Missing: ${CONF}!"
         wineboot &> /dev/null
         INFO "Created: $WINEPREFIX"
     fi
-    INFO "Last tested version: wine-1.9.24"
+    INFO "Last tested version: wine-2.16"
     INFO "Your version: $(wine --version)"
 }
 
