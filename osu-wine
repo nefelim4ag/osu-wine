@@ -1,8 +1,8 @@
 #!/bin/bash
 ## Logging functions
-INFO(){ echo -n "INFO: $*";}
-WARN(){ echo -n "WARN: $*";}
-ERRO(){ echo -n "ERRO: $*"; exit 1;}
+INFO(){ echo "INFO: $*"; }
+WARN(){ echo "WARN: $*"; }
+ERRO(){ echo "ERRO: $*"; exit 1; }
 
 ## Check some deps
 bin_exist(){ command -v "$1" &> /dev/null || ERRO "Missing ${1}!"; }
