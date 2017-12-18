@@ -22,7 +22,12 @@ fi
 
 $SUDO install -Dm644 ./osu-wine.conf    "$PREFIX/etc/osu-wine.conf"
 $SUDO install -Dm755 ./osu-wine         "$PREFIX/usr/bin/osu-wine"
-$SUDO install -Dm644 ./osu-wine.png     "$PREFIX/usr/share/icons/hicolor/256x256/apps/osu-wine.png"
+
+$SUDO install -Dm644 ./osu-wine-16.png   "$PREFIX/usr/share/icons/hicolor/16x16/apps/osu-wine.png"
+$SUDO install -Dm644 ./osu-wine-32.png   "$PREFIX/usr/share/icons/hicolor/32x32/apps/osu-wine.png"
+$SUDO install -Dm644 ./osu-wine-48.png   "$PREFIX/usr/share/icons/hicolor/48x48/apps/osu-wine.png"
+$SUDO install -Dm644 ./osu-wine-256.png  "$PREFIX/usr/share/icons/hicolor/256x256/apps/osu-wine.png"
+$SUDO install -Dm644 ./osu-wine-1024.png "$PREFIX/usr/share/icons/hicolor/1024x1024/apps/osu-wine.png"
 
 $SUDO install -Dm644 ./osu-wine.desktop "$PREFIX/usr/share/applications/osu-wine.desktop"
 $SUDO install -Dm644 ./osu-wine-osk.desktop "$PREFIX/usr/share/applications/osu-wine-osk.desktop"
