@@ -6,7 +6,7 @@ ERRO(){ echo "ERRO: $*"; exit 1; }
 
 ## Check some deps
 bin_exist(){ command -v "$1" &> /dev/null || ERRO "Missing ${1}!"; }
-for bin in wine winetricks wineserver winepath wineboot; do
+for bin in wine winetricks wineserver winepath wineboot wget; do
     bin_exist $bin
 done
 
