@@ -94,6 +94,9 @@ if [ -f "$1" ]; then
         $PREFIXCOMMAND wine "X:/osu!.exe" "$file"
     done
     exit 0
+elif [[ "$1" =~ osu:// ]]; then
+    ## pass osu:// links to osu!
+    $PREFIXCOMMAND wine "X:/osu!.exe" "$1"
 else
     $PREFIXCOMMAND wine "X:/osu!.exe"
 fi
