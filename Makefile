@@ -23,7 +23,7 @@ BIN_S := $(SRC_DIR)/osu-wine
 BIN_I := $(PREFIX)/usr/bin/osu-wine
 
 $(BIN_I): $(BIN_S)
-	install -Dm644 $< $@
+	install -Dm755 $< $@
 
 
 CNF_S := $(SRC_DIR)/osu-wine.conf
