@@ -17,7 +17,7 @@ rm_w(){ [ -f "$1" ] && rm "$1"; }
 export PREFIXCOMMAND TMP BASE_DIR
 
 export WINEPREFIX WINEARCH
-export WINE_REQ_MOD=( dotnet45 )
+export WINE_REQ_MOD=( dotnet45 gdiplus vlgothic )
 export OSU_INSTALL_PATH
 
 CONF=/etc/osu-wine.conf
