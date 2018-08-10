@@ -18,7 +18,7 @@ fi
 function install() {
 	[ $EUID -ne 0 ] && ERRO "Please run as root!"
 	[ -e /usr/bin/osu-wine ] && ERRO "Please uninstall before installing!"
-	
+
 	INFO "Installing icons..."
 	which awk &> /dev/null || ERRO "Missing awk!";
 	dimensions_arr=( $(ls ./icons | awk -F '-' '{print $3}' | awk -F '.' '{print $1}') )
@@ -60,7 +60,7 @@ function uninstall() {
 	rm -f /usr/bin/osu-wine
 
 	read -p "$(INFO "Do you want to uninstall the config files? (y/n)")" CHOICE
-	if [[ $CHOICE = 'y' || $ CHOICE = 'Y' ]]; then
+	if [[ $CHOICE = 'y' || $CHOICE = 'Y' ]]; then
 		INFO "Uninstalling config files..."
 		rm -f /etc/osu-wine.conf
 		WARN "Not uninstalling user config files."
