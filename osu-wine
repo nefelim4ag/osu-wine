@@ -36,58 +36,44 @@ bin_exist(){
 }
 bin_exist wine winetricks wineserver winepath wineboot wget
 
-{
-    INFO "Check: Base dir $BASE_DIR"
-    mkdir -p "$BASE_DIR"
-}
+INFO "Check: Base dir $BASE_DIR"
+mkdir -p "$BASE_DIR"
 
-{
-    INFO "Check: wineprefix exist $WINEPREFIX"
-    if [ ! -d "$WINEPREFIX" ]; then
-        INFO "Wine prefix not exist"
-        INFO "So try recreate it"
-        wineboot &> /dev/null
-        INFO "Created: $WINEPREFIX"
-    fi
-    INFO "Last tested version: wine-2.16"
-    INFO "Your version: $(wine --version)"
-}
+INFO "Check: wineprefix exist $WINEPREFIX"
+if [ ! -d "$WINEPREFIX" ]; then
+    INFO "Wine prefix not exist"
+    INFO "So try recreate it"
+    wineboot &> /dev/null
+    INFO "Created: $WINEPREFIX"
+fi
+INFO "Last tested version: wine-2.16"
+INFO "Your version: $(wine --version)"
 
-{
-    INFO "Check: wineprefix configured"
-    cd "$WINEPREFIX" || exit 1
-    if [ ! -f "winetricks.log" ]; then
-        winetricks -q --optout "${WINE_REQ_MOD[@]}" || ERRO "Something went wrong at Winetricks!"
-    fi
-}
+INFO "Check: wineprefix configured"
+cd "$WINEPREFIX" || exit 1
+if [ ! -f "winetricks.log" ]; then
+    winetricks -q --optout "${WINE_REQ_MOD[@]}" || ERRO "Something went wrong at Winetricks!"
+fi
 
-{
-    INFO "Check: wine can access only to wine drive C:/ + X:/ (osu)"
-    for link in "$WINEPREFIX/dosdevices"/*; do
-        [[ "$link" =~ c: ]] && continue # For default link to ../drive_c
-        [[ "$link" =~ x: ]] && continue # For link to osu path
-        rm -v "$link"
-    done
-}
+INFO "Check: wine can access only to wine drive C:/ + X:/ (osu)"
+for link in "$WINEPREFIX/dosdevices"/*; do
+    [[ "$link" =~ c: ]] && continue # For default link to ../drive_c
+    [[ "$link" =~ x: ]] && continue # For link to osu path
+    rm -v "$link"
+done
 
-{
-    INFO "Check: osu dir"
-    mkdir -p "$OSU_INSTALL_PATH"
-}
+INFO "Check: osu dir"
+mkdir -p "$OSU_INSTALL_PATH"
 
-{
-    INFO "Check: Link X: -> $OSU_INSTALL_PATH"
-    ln -Tfs "$OSU_INSTALL_PATH" "$WINEPREFIX/dosdevices/x:"
-}
+INFO "Check: Link X: -> $OSU_INSTALL_PATH"
+ln -Tfs "$OSU_INSTALL_PATH" "$WINEPREFIX/dosdevices/x:"
 
 cd "$OSU_INSTALL_PATH" || exit 1
 
-{
-    if [ ! -f "osu!.exe" ]; then
-        INFO "Can't find osu exe, reinstall"
-        wget "http://m1.ppy.sh/r/osu!install.exe" -O "osu!.exe"
-    fi
-}
+if [ ! -f "osu!.exe" ]; then
+    INFO "Can't find osu exe, reinstall"
+    wget "http://m1.ppy.sh/r/osu!install.exe" -O "osu!.exe"
+fi
 
 if [[ "${marcRPC}" = true ]]; then 
     DEST="$BASE_DIR/rpc-dll/"
