@@ -10,6 +10,7 @@ ERRO(){ echo -e '\033[0;31m'"ERRO:\033[0m $*"; exit 1; }
 INFO "Checking dependencies..."
 if [ ! -e ./osu-wine ]; then
 	cd ..
+	rm -rf osu-wine/
 	git clone https://github.com/diamondburned/osu-wine
 	cd osu-wine
 fi
