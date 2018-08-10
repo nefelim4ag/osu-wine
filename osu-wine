@@ -1,36 +1,41 @@
 #!/bin/bash
 ## Logging functions
-INFO(){ echo "INFO: $*"; }
-WARN(){ echo "WARN: $*"; }
-ERRO(){ echo "ERRO: $*"; exit 1; }
-
-## Check some deps
-bin_exist(){ command -v "$1" &> /dev/null || ERRO "Missing ${1}!"; }
-for bin in wine winetricks wineserver winepath wineboot wget; do
-    bin_exist $bin
-done
+INFO(){ echo -e '\033[0;32m'"INFO:\033[0m $*"; }
+WARN(){ echo -e '\033[0;33m'"WARN:\033[0m $*"; }
+ERRO(){ echo -e '\033[0;31m'"ERRO:\033[0m $*"; exit 1; }
 
 ## Define useful functions
 rm_w(){ [ -f "$1" ] && rm "$1"; }
 
 ## Some vars
 export PREFIXCOMMAND TMP BASE_DIR
-
+#export STAGING_AUDIO_DURATION=75000
 export WINEPREFIX WINEARCH
-export WINE_REQ_MOD=( dotnet45 gdiplus vlgothic )
+export WINE_REQ_MOD=( dotnet45 gdiplus )
 export OSU_INSTALL_PATH
 
-CONF=/etc/osu-wine.conf
 TMP="$(mktemp -u)"
 
-## Initialization
-# shellcheck source=osu-wine.conf
-source "$CONF" &> /dev/null || ERRO "Missing: ${CONF}!"
+WINEARCH=win32
+BASE_DIR="$HOME/.local/share/osu-wine"
+WINEPREFIX="$BASE_DIR/WINE.$WINEARCH/"
+OSU_INSTALL_PATH="$BASE_DIR/OSU/"
+WINE="/usr/bin/wine"
+marcRPC="false"
 
-[ -z "$WINEARCH" ]         && WINEARCH=win32
-[ -z "$BASE_DIR" ]         && BASE_DIR="$HOME/.local/share/osu-wine"
-[ -z "$WINEPREFIX" ]       && WINEPREFIX="$BASE_DIR/WINE.$WINEARCH/"
-[ -z "$OSU_INSTALL_PATH" ] && OSU_INSTALL_PATH="$BASE_DIR/OSU/"
+# Sourcing after defining the config 
+CONF=( '/etc/osu-wine.conf' "$HOME/.osu-wine.conf" )
+for each in "${CONF[@]}"; do
+    source "$each" &> /dev/null || WARN "Missing: ${CONF}!";
+done
+
+## Check some deps, the right way
+bin_exist(){ 
+    for bin in "$@"; do 
+        which "$1" &> /dev/null || ERRO "Missing ${1}!"; 
+    done
+}
+bin_exist wine winetricks wineserver winepath wineboot wget
 
 {
     INFO "Check: Base dir $BASE_DIR"
@@ -53,7 +58,7 @@ source "$CONF" &> /dev/null || ERRO "Missing: ${CONF}!"
     INFO "Check: wineprefix configured"
     cd "$WINEPREFIX" || exit 1
     if [ ! -f "winetricks.log" ]; then
-        winetricks -q --optout "${WINE_REQ_MOD[@]}" || ERRO "Something went wrong!"
+        winetricks -q --optout "${WINE_REQ_MOD[@]}" || ERRO "Something went wrong at Winetricks!"
     fi
 }
 
@@ -81,22 +86,46 @@ cd "$OSU_INSTALL_PATH" || exit 1
 {
     if [ ! -f "osu!.exe" ]; then
         INFO "Can't find osu exe, reinstall"
-        wget http://m1.ppy.sh/r/osu!install.exe -O "osu!.exe"
+        wget "http://m1.ppy.sh/r/osu!install.exe" -O "osu!.exe"
     fi
 }
 
+if [[ "${marcRPC}" = true ]]; then 
+    DEST="$BASE_DIR/rpc-dll/"
+    if [[ ! -e "$DEST/bin32" || ! -e "$DEST/bin64" ]]; then
+        mkdir -p "$DEST"
+        bin_exist wget tar
+        [ -z $ver ] && ver="1.0.0"
+        wget -O "/tmp/rpc-wine.tar.gz" "https://github.com/Marc3842h/rpc-wine/releases/download/${ver}/rpc-wine.tar.gz" || ERRO "Failed to fetch marc-rpc"
+        tar -xvzf "/tmp/rpc-wine.tar.gz" -C "$DEST" &> /dev/null || ERRO "tar failed to extract."
+    fi
+
+    export WINEDLLPATH="$DEST/bin32:$DEST/bin64:$WINEDLLPATH"
+fi
+
 INFO "Initialization Finished"
 
-if [ -f "$1" ]; then
-    mv -v "$1" ./
-    for file in ./*.osz ./*.osz2 ./*.osr ./*.osk; do
-        [ ! -f "$file" ] && continue
-        $PREFIXCOMMAND wine "X:/osu!.exe" "$file"
-    done
-    exit 0
-elif [[ "$1" =~ osu:// ]]; then
-    ## pass osu:// links to osu!
-    $PREFIXCOMMAND wine "X:/osu!.exe" "$1"
-else
-    $PREFIXCOMMAND wine "X:/osu!.exe"
-fi
+case $1 in 
+    *'.osz'|*'.osz2'|*'.osr'|*'.osk')
+        mv -f "$1" ./
+        for file in ./*.osz ./*.osz2 ./*.osr ./*.osk; do
+            [ ! -f "$file" ] && continue
+            $PREFIXCOMMAND $WINE "X:/osu!.exe" "$file"
+        done
+        exit 0
+        ;;
+    'osu://'*)
+        $PREFIXCOMMAND $WINE "X:/osu!.exe" "$1"
+        ;;
+    '--winetricks')
+        $PREFIXCOMMAND winetricks ${@:2} || ERRO "Winetricks errored out."
+        exit 0
+        ;;
+    '--winecfg')
+        $PREFIXCOMMAND winecfg || ERRO "Winecfg errored out."
+        exit 0
+        ;;
+    *)
+        $PREFIXCOMMAND $WINE "X:/osu!.exe" &> /tmp/osu-wine.log &
+        ;;
+esac
