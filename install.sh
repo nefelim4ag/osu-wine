@@ -15,11 +15,10 @@ if [ ! -e ./osu-wine ]; then
 	cd osu-wine
 fi
 
-[ -e /usr/bin/osu-wine ] && ERRO "Please uninstall before installing!"
-
 function install() {
 	[ $EUID -ne 0 ] && ERRO "Please run as root!"
-
+	[ -e /usr/bin/osu-wine ] && ERRO "Please uninstall before installing!"
+	
 	INFO "Installing icons..."
 	which awk &> /dev/null || ERRO "Missing awk!";
 	dimensions_arr=( $(ls ./icons | awk -F '-' '{print $3}' | awk -F '.' '{print $1}') )
