@@ -9,7 +9,6 @@ rm_w(){ [ -f "$1" ] && rm "$1"; }
 
 ## Some vars
 export PREFIXCOMMAND TMP BASE_DIR
-#export STAGING_AUDIO_DURATION=75000
 export WINEPREFIX WINEARCH
 export WINE_REQ_MOD=( dotnet45 gdiplus )
 export OSU_INSTALL_PATH
@@ -20,7 +19,7 @@ WINEARCH=win32
 BASE_DIR="$HOME/.local/share/osu-wine"
 WINEPREFIX="$BASE_DIR/WINE.$WINEARCH/"
 OSU_INSTALL_PATH="$BASE_DIR/OSU/"
-WINE="/usr/bin/wine"
+WINE="wine"
 marcRPC="false"
 
 # Sourcing after defining the config 
