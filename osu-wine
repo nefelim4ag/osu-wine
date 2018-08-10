@@ -86,6 +86,7 @@ cd "$OSU_INSTALL_PATH" || exit 1
     if [ ! -f "osu!.exe" ]; then
         INFO "Can't find osu exe, reinstall"
         wget "http://m1.ppy.sh/r/osu!install.exe" -O "osu!.exe"
+        [ ! -f "discord-rpc.dll" ] && wget "https://github.com/diamondburned/osu-wine/raw/master/static/discord-rpc.dll" -O "discord-rpc.dll"
     fi
 }
 
