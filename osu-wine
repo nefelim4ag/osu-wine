@@ -29,7 +29,7 @@ for each in "${CONF[@]}"; do
 done
 
 ## Check some deps, the right way
-bin_exist(){ 
+bin_exist(){
     for bin in "$@"; do 
         which "$1" &> /dev/null || ERRO "Missing ${1}!"; 
     done
@@ -38,7 +38,7 @@ bin_exist wine winetricks wineserver winepath wineboot wget
 
 {
     INFO "Check: Base dir $BASE_DIR"
-    mkdir -p "$BASE_DIR"
+    mkdir -p "$BASE_DIR"                    
 }
 
 {
