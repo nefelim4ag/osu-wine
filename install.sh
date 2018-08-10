@@ -35,7 +35,7 @@ function install() {
 	cp ./osu-wine /usr/bin/osu-wine && chmod 755 /usr/bin/osu-wine || ERRO "Can't install script"
 	
 	INFO "Installing config files..."
-	cp ./osu-wine.conf /etc/osu-wine
+	cp ./osu-wine.conf /etc/
 	WARN "Not installing user config file! To do so, please run this command post installation:"
 	WARN "cp /etc/osu-wine.conf ~/.osu-wine.conf"
 
